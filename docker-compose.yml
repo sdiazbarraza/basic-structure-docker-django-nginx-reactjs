@@ -6,13 +6,13 @@ services:
     volumes:
       - ./backend/:/backend # maps host diretory to internal container directory
     working_dir: /backend/
-    command: sh entrypoint.sh
   frontend:
-    image: node:8.9
-    command: sh entrypoint.sh
+    image: node:latest
+    command: bash -c "yarn  && yarn build && yarn start" # Comando para iniciar el front
     working_dir: /frontend
     volumes:
       - ./frontend/:/frontend
+    tty: true
   nginx:
     image: nginx:latest
     ports:
