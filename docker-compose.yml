@@ -6,19 +6,36 @@ services:
     volumes:
       - ./backend/:/backend # maps host diretory to internal container directory
     working_dir: /backend/
+    depends_on: 
+      - postgres
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=sistema
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports: 
+      - 5432:5432
+    networks:
+      default:
+        aliases:
+        - db          
   frontend:
-    image: node:latest
-    command: bash -c "yarn  && yarn build && yarn start" # Comando para iniciar el front
+    command: bash entrypoint.sh # Comando para iniciar el front
     working_dir: /frontend
+    build: ./frontend
     volumes:
       - ./frontend/:/frontend
     tty: true
+    ports:
+      - 3000:3000
+      - 3001:3001
   nginx:
-    image: nginx:latest
+    image: nginx:1.19.1
     ports:
       - 80:8080
     volumes:
       - ./nginx/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       - ./frontend/build:/var/www/frontend
     depends_on:
-      - backend
+      - backend           

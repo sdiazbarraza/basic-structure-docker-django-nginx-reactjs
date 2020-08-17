@@ -1,0 +1,3 @@
+FROM   node:14.5.0
+WORKDIR /
+EXPOSE 3000
