@@ -38,4 +38,19 @@ services:
       - ./nginx/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       - ./frontend/build:/var/www/frontend
     depends_on:
-      - backend           
+      - backend
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "user@domain.com"
+      PGADMIN_DEFAULT_PASSWORD: "root"
+    volumes:
+      - ./configs/servers.json:/pgadmin4/servers.json
+    networks:
+      default:
+        aliases:
+          - pgadmin
+    ports:
+      - 7355:80
+    depends_on:
+      - postgres                 
